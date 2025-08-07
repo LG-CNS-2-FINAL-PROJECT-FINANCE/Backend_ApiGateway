@@ -33,7 +33,7 @@ dependencies {
 
 	// Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 	//JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
@@ -58,6 +58,7 @@ tasks.named('test') {
 jar {
 	enabled = false // plain.jar 생성 완전히 비활성화
 }
+
 tasks.register('getAppName') {
 	doLast {
 		println "${rootProject.name}"

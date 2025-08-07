@@ -12,9 +12,12 @@ public class AuthenticationHeaderFilterFunction {
             ServerRequest.Builder requestBuilder = ServerRequest.from(request);
 
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if( principal instanceof UserPrincipal userPrincipal) {
-                requestBuilder.header("X-Auth-UserId",userPrincipal.getUserId());
 
+            if( principal instanceof UserPrincipal userPrincipal) {
+                requestBuilder.header("X-Auth-UserId", userPrincipal.getUserId());
+                if (userPrincipal.getBankType() != null) {
+                    requestBuilder.header("X-Auth-BankType", String.valueOf(userPrincipal.getBankType()));
+                }
                 // 다른 Claims 들도 ...
             }
 

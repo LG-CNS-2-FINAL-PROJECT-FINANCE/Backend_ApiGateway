@@ -11,6 +11,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserPrincipal implements Principal {
     private final String userId;
+    private final Integer bankType;
 
     public boolean hasName() {
         return userId != null;

@@ -1,56 +1,52 @@
 server:
-  port: 18080
+  port: 8080
 
 spring:
   cloud:
     gateway:
-      mvc:
+      webmvc:
         routes:
           - id: backend-user
-            uri: http://localhost:8080
+            uri: http://k8s-backend-asset-service:8081
             predicates:
-              - Path=/user/**
+              - Path=/api/user/**
             filters:
               - addAuthenticationHeader
 
-#          - id: backend-asset
-#            uri: http://k8s-backend-asset-service:8080
-#            predicates:
-#              - Path=/asset/**
-#            filters:
-#              - addAuthenticationHeader
+          - id: backend-asset
+            uri: http://k8s-backend-asset-service:8082
+            predicates:
+              - Path=/asset/**
+            filters:
+              - addAuthenticationHeader
 
-#          - id: backend-product
-#            uri: http://k8s-backend-product-service:8080
-#            predicates:
-#              - Path=/product/**
-#            filters:
-#              - addAuthenticationHeader
+          - id: backend-product
+            uri: http://k8s-backend-product-service:8083
+            predicates:
+              - Path=/product/**
+            filters:
+              - addAuthenticationHeader
 
-#          - id: backend-market
-#            uri: http://k8s-backend-market-service:8080
-#            predicates:
-#              - Path=/market/**
-#            filters:
-#              - addAuthenticationHeader
+          - id: backend-escrow
+            uri: http://k8s-backend-escrow-service:8084
+            predicates:
+              - Path=/escrow/**
+            filters:
+              - addAuthenticationHeader
 
-#          - id: backend-escrow
-#            uri: http://k8s-backend-escrow-service:8080
-#            predicates:
-#              - Path=/escrow/**
-#            filters:
-#              - addAuthenticationHeader
+          - id: backend-blockchain
+            uri: http://k8s-backend-blockchain-service:8085
+            predicates:
+              - Path=/blockchain/**
+            filters:
+              - addAuthenticationHeader
 
-#          - id: backend-oracle
-#            uri: http://k8s-backend-oracle-service:8080
-#            predicates:
-#              - Path=/oracle/**
-#            filters:
-#              - addAuthenticationHeader
+          - id: backend-market
+            uri: http://k8s-backend-market-service:8086
+            predicates:
+              - Path=/market/**
+            filters:
+              - addAuthenticationHeader
 
-#          - id: backend-monitoring
-#            uri: http://k8s-backend-monitoring-service:8080
-#            predicates:
-#              - Path=/monitoring/**
-#            filters:
-#              - addAuthenticationHeader
+jwt:
+  secretkey: ${JWT_SECRET_KEY}
