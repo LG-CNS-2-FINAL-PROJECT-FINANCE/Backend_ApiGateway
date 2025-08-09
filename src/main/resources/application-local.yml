@@ -7,7 +7,7 @@ spring:
       webmvc:
         routes:
           - id: backend-user
-            uri: http://k8s-backend-asset-service:8081
+            uri: http://k8s-backend-user-service:8081
             predicates:
               - Path=/api/user/**
             filters:
@@ -16,35 +16,35 @@ spring:
           - id: backend-asset
             uri: http://k8s-backend-asset-service:8082
             predicates:
-              - Path=/asset/**
+              - Path=/api/asset/**
             filters:
               - addAuthenticationHeader
 
           - id: backend-product
             uri: http://k8s-backend-product-service:8083
             predicates:
-              - Path=/product/**
+              - Path=/api/product/**
             filters:
               - addAuthenticationHeader
 
           - id: backend-escrow
             uri: http://k8s-backend-escrow-service:8084
             predicates:
-              - Path=/escrow/**
+              - Path=/api/escrow/**
             filters:
               - addAuthenticationHeader
 
-          - id: backend-blockchain
-            uri: http://k8s-backend-blockchain-service:8085
+          - id: backend-blockchain-contract
+            uri: http://k8s-backend-contract-service:8085
             predicates:
-              - Path=/blockchain/**
+              - Path=/api/contract/**
             filters:
               - addAuthenticationHeader
 
           - id: backend-market
             uri: http://k8s-backend-market-service:8086
             predicates:
-              - Path=/market/**
+              - Path=/api/market/**
             filters:
               - addAuthenticationHeader
 
