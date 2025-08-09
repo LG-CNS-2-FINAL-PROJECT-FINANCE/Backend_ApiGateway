@@ -10,7 +10,7 @@ pipeline {
         REGISTRY_HOST = "192.168.56.200:5000"
         USER_EMAIL = 'ssassaium@gmail.com'
         USER_ID = 'kaebalsaebal'
-        SERVICE_NAME = '(서비스 이름: product, market 등...)'
+        SERVICE_NAME = 'api_gateway'
 
     }
 
