@@ -58,7 +58,7 @@ public class WebSecurityConfig {
                         // USER 또는 ADMIN 역할이 필요한 API
                         .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
                         // 로그인 관련은 인증 필요x
-                        .requestMatchers("/api/user/auth").permitAll()
+                        .requestMatchers("/api/user/auth/**").permitAll()
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 );
