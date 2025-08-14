@@ -10,7 +10,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor
 public class UserPrincipal implements Principal {
-    private final String userId;
+    private final Integer userId;
     private final Integer bankType;
 
     public boolean hasName() {
@@ -28,7 +28,7 @@ public class UserPrincipal implements Principal {
 
     @Override
     public String getName() {
-        return userId;
+        return userId.toString();
     }
 
     @Override
