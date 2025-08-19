@@ -1,11 +1,15 @@
 package com.ddiring.k8s_api_gateway.gateway.filter;
 
 import com.ddiring.k8s_api_gateway.security.jwt.authentication.UserPrincipal;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.function.ServerRequest;
 
 import java.util.function.Function;
 
+@Slf4j
 public class AuthenticationHeaderFilterFunction {
     public static Function<ServerRequest, ServerRequest> addHeader() {
         return request -> {
@@ -14,7 +18,9 @@ public class AuthenticationHeaderFilterFunction {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             if( principal instanceof UserPrincipal userPrincipal) {
-                 requestBuilder.header("userSeq", userPrincipal.getUserId());
+                String userId = userPrincipal.getUserId();
+                log.info("Adding userSeq header with value: {}", userId);
+                requestBuilder.header("userSeq", userPrincipal.getUserId());
                 if (userPrincipal.getRole() != null) {
                     requestBuilder.header("role", String.valueOf(userPrincipal.getRole()));
                 }
