@@ -40,7 +40,7 @@ public class JwtTokenValidator {
 
     public JwtAuthentication validateToken(String token) {
         String userId = null;
-        Integer bankType = null;
+        Integer role = null;
 
         final Claims claims = this.verifyAndGetClaims(token);
         if (claims == null) {
@@ -53,21 +53,21 @@ public class JwtTokenValidator {
         }
 
         userId = claims.get("userId", String.class);
-        bankType = claims.get("bankType", Integer.class);
+        role = claims.get("role", Integer.class);
 
         String tokenType = claims.get("tokenType", String.class);
         if (!"access".equals(tokenType)) {
             return null;
         }
 
-        UserPrincipal principal = new UserPrincipal(userId, bankType);
-        String role;
-        if (bankType != null && bankType == 2) {
-            role = "ADMIN";
-        } else if (bankType != null && (bankType == 0 || bankType == 1)) {
-            role = "USER";
+        UserPrincipal principal = new UserPrincipal(userId, role);
+        String role1;
+        if (role != null && role == 2) {
+            role1 = "ADMIN";
+        } else if (role != null && (role == 0 || role == 1)) {
+            role1 = "USER";
         } else {
-            role = "GUEST";
+            role1 = "GUEST";
         }
 
         return new JwtAuthentication(principal, token, getGrantedAuthorities("user"));
@@ -89,10 +89,10 @@ public class JwtTokenValidator {
         return claims;
     }
 
-    private List<GrantedAuthority> getGrantedAuthorities(String role) {
+    private List<GrantedAuthority> getGrantedAuthorities(String role1) {
         ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if (role != null) {
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+        if (role1 != null) {
+            grantedAuthorities.add(new SimpleGrantedAuthority("role1_" + role1));
         }
 
         return grantedAuthorities;
