@@ -14,9 +14,9 @@ public class AuthenticationHeaderFilterFunction {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             if( principal instanceof UserPrincipal userPrincipal) {
-                requestBuilder.header("X-Auth-UserId", userPrincipal.getUserId());
-                if (userPrincipal.getBankType() != null) {
-                    requestBuilder.header("X-Auth-BankType", String.valueOf(userPrincipal.getBankType()));
+                 requestBuilder.header("userSeq", userPrincipal.getUserId());
+                if (userPrincipal.getRole() != null) {
+                    requestBuilder.header("role", String.valueOf(userPrincipal.getRole()));
                 }
                 // 다른 Claims 들도 ...
             }
