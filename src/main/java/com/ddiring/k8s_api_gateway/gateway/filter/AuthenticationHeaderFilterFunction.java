@@ -20,6 +20,7 @@ public class AuthenticationHeaderFilterFunction {
             if( principal instanceof UserPrincipal userPrincipal) {
                 String userSeq = userPrincipal.getUserSeq();
                 String role =  userPrincipal.getRole();
+                log.info("userSeq : {} role : {}", userSeq, role);
                 requestBuilder.header("userSeq", userSeq);
                 requestBuilder.header("role", role);
             }
