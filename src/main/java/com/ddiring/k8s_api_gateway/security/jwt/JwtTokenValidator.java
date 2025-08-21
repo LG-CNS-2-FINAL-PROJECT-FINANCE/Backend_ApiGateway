@@ -70,7 +70,7 @@ public class JwtTokenValidator {
             role1 = "GUEST";
         }
 
-        return new JwtAuthentication(principal, token, getGrantedAuthorities("user"));
+        return new JwtAuthentication(principal, token, getGrantedAuthorities(role1));
     }
 
     private Claims verifyAndGetClaims(String token) {
