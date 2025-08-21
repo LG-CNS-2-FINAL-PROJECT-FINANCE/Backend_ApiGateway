@@ -11,6 +11,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class JwtConfigProperties {
-    private String header;
+    private String header = "Authorization";
     private String secretKey;
 }
