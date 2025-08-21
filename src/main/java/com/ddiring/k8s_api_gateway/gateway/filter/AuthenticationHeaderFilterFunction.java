@@ -20,7 +20,7 @@ public class AuthenticationHeaderFilterFunction {
             if( principal instanceof UserPrincipal userPrincipal) {
                 String userId = userPrincipal.getUserId();
                 log.info("Adding userSeq header with value: {}", userId);
-                requestBuilder.header("userSeq", userPrincipal.getUserId());
+                requestBuilder.header("userSeq", "46227860-da96-4412-afa2-a3fa2e0f089a");
                 if (userPrincipal.getRole() != null) {
                     requestBuilder.header("role", String.valueOf(userPrincipal.getRole()));
                 }
