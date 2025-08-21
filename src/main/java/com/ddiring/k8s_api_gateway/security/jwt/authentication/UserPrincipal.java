@@ -10,15 +10,15 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor
 public class UserPrincipal implements Principal {
-    private final String userId;
+    private final String userSeq;
     private final String role;
 
     public boolean hasName() {
-        return userId != null;
+        return userSeq != null;
     }
 
     public boolean hasMandatory() {
-        return userId != null;
+        return userSeq != null;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class UserPrincipal implements Principal {
 
     @Override
     public String getName() {
-        return userId;
+        return userSeq;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class UserPrincipal implements Principal {
 
         UserPrincipal principal = (UserPrincipal) another;
 
-        if (Objects.equals(userId, principal.userId)) {
+        if (Objects.equals(userSeq, principal.userSeq)) {
             return false;
         }
 
@@ -48,7 +48,7 @@ public class UserPrincipal implements Principal {
 
     @Override
     public  int hashCode() {
-        int result = userId != null ? userId.hashCode() : 0;
+        int result = userSeq != null ? userSeq.hashCode() : 0;
         return result;
     }
 }

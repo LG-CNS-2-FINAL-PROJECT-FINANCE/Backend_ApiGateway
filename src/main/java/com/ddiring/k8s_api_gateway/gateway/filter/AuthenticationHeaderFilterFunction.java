@@ -18,10 +18,10 @@ public class AuthenticationHeaderFilterFunction {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             if( principal instanceof UserPrincipal userPrincipal) {
-                String userId = userPrincipal.getUserId();
+                String userId = userPrincipal.getUserSeq();
                 String role =  userPrincipal.getRole();
                 log.info("Adding userSeq header with value: {}", userId);
-                requestBuilder.header("userSeq", userPrincipal.getUserId());
+                requestBuilder.header("userSeq", userPrincipal.getUserSeq());
                 requestBuilder.header("role", String.valueOf(userPrincipal.getRole()));
             }
 
