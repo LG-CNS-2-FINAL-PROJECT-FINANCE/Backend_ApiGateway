@@ -73,7 +73,7 @@ public class JwtTokenValidator {
             role1 = "GUEST";
         }
 
-        return new JwtAuthentication(principal, token, getGrantedAuthorities(role1));
+        return new JwtAuthentication(principal, token, getGrantedAuthorities(role));
     }
 
     private Claims verifyAndGetClaims(String token) {
@@ -105,7 +105,7 @@ public class JwtTokenValidator {
 
     public String getToken(HttpServletRequest request) {
         String authHeader = getAuthHeaderFromHeader(request);
-        if (authHeader != null && authHeader.startsWith("Bearer")) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
 
