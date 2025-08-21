@@ -33,18 +33,15 @@ public class UserPrincipal implements Principal {
 
     @Override
     public boolean equals(Object another) {
-        if( this == another) return true;
-        if( another == null) return false;
-        if(!getClass().isAssignableFrom(another.getClass())) return false;
+        if (this == another) return true;
+        if (another == null || getClass() != another.getClass()) return false; // 클래스 체크 방식 수정
 
         UserPrincipal principal = (UserPrincipal) another;
 
-        if (Objects.equals(userSeq, principal.userSeq)) {
-            return false;
-        }
-
-        return true;
+        // userSeq가 같으면 true를 반환해야 함
+        return Objects.equals(userSeq, principal.userSeq);
     }
+
 
     @Override
     public  int hashCode() {
