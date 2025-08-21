@@ -40,7 +40,7 @@ public class JwtTokenValidator {
 
     public JwtAuthentication validateToken(String token) {
         String userId = null;
-        Integer role = null;
+        String role = null;
 
         final Claims claims = this.verifyAndGetClaims(token);
         if (claims == null) {
@@ -53,7 +53,7 @@ public class JwtTokenValidator {
         }
 
         userId = claims.get("userId", String.class);
-        role = claims.get("role", Integer.class);
+        role = claims.get("role", String.class);
 
         String tokenType = claims.get("tokenType", String.class);
         if (!"access".equals(tokenType)) {
@@ -62,9 +62,9 @@ public class JwtTokenValidator {
 
         UserPrincipal principal = new UserPrincipal(userId, role);
         String role1;
-        if (role != null && role == 2) {
+        if (role != null && role.equals("ADMIN")) {
             role1 = "ADMIN";
-        } else if (role != null && (role == 0 || role == 1)) {
+        } else if (role != null && (role.equals("CREATOR") || role.equals("USER"))) {
             role1 = "USER";
         } else {
             role1 = "GUEST";
