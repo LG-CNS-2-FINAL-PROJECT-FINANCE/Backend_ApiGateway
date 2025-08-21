@@ -38,7 +38,6 @@ public class UserPrincipal implements Principal {
 
         UserPrincipal principal = (UserPrincipal) another;
 
-        // userSeq가 같으면 true를 반환해야 함
         return Objects.equals(userSeq, principal.userSeq);
     }
 
