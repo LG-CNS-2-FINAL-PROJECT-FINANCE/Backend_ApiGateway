@@ -19,15 +19,12 @@ public class AuthenticationHeaderFilterFunction {
 
             if( principal instanceof UserPrincipal userPrincipal) {
                 String userId = userPrincipal.getUserId();
+                String role =  userPrincipal.getRole();
                 log.info("Adding userSeq header with value: {}", userId);
-                requestBuilder.header("userSeq", "46227860-da96-4412-afa2-a3fa2e0f089a");
-                if (userPrincipal.getRole() != null) {
-                    requestBuilder.header("role", String.valueOf(userPrincipal.getRole()));
-                }
-                // 다른 Claims 들도 ...
+                requestBuilder.header("userSeq", userPrincipal.getUserId());
+                requestBuilder.header("role", String.valueOf(userPrincipal.getRole()));
             }
 
-            // Client ID, DeviceType 등도 필요시 입력
 
             return requestBuilder.build();
         };

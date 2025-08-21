@@ -11,7 +11,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserPrincipal implements Principal {
     private final String userId;
-    private final Integer role;
+    private final String role;
 
     public boolean hasName() {
         return userId != null;
