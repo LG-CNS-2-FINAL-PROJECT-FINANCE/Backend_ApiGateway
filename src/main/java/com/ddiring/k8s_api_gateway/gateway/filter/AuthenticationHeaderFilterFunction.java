@@ -24,6 +24,9 @@ public class AuthenticationHeaderFilterFunction {
                 requestBuilder.header("userSeq", userSeq);
                 requestBuilder.header("role", role);
             }
+            else {
+                log.info("sda : {}", principal);
+            }
 
             return requestBuilder.build();
         };
