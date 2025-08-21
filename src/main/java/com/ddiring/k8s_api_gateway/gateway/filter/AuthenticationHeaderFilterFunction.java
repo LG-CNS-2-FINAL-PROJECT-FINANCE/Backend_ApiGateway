@@ -16,6 +16,7 @@ public class AuthenticationHeaderFilterFunction {
             ServerRequest.Builder requestBuilder = ServerRequest.from(request);
 
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            log.info("기분좋아");
 
             if( principal instanceof UserPrincipal userPrincipal) {
                 String userSeq = userPrincipal.getUserSeq();
@@ -24,7 +25,6 @@ public class AuthenticationHeaderFilterFunction {
                 requestBuilder.header("userSeq", userSeq);
                 requestBuilder.header("role", role);
             }
-
 
             return requestBuilder.build();
         };
