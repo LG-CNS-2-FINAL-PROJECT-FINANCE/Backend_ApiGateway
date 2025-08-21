@@ -9,6 +9,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenValidator {
@@ -54,13 +56,14 @@ public class JwtTokenValidator {
 
         userSeq = claims.get("userSeq", String.class);
         role = claims.get("role", String.class);
-
+        log.info("userSeq={}, role={}", userSeq, role);
         String tokenType = claims.get("tokenType", String.class);
         if (!"access".equals(tokenType)) {
             return null;
         }
 
         UserPrincipal principal = new UserPrincipal(userSeq, role);
+        log.info("principal={}", principal);
         String role1;
         if (role != null && role.equals("ADMIN")) {
             role1 = "ADMIN";
