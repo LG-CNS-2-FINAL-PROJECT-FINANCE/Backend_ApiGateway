@@ -53,9 +53,8 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/user/bankType").hasRole("GUEST")
                         // ADMIN 역할이 필요한 API
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/user/**").hasAnyRole("USER", "CREATOR", "ADMIN")
                         // 로그인 관련은 인증 필요x
-                        .requestMatchers("/api/**").permitAll()
                         // bankType 업데이트 API는 GUEST 역할 사용자에게만 허용
                         .requestMatchers("/api/user/auth/**").permitAll()
                         // 그 외 모든 요청은 인증 필요

@@ -92,12 +92,14 @@ public class JwtTokenValidator {
         return claims;
     }
 
-    private List<GrantedAuthority> getGrantedAuthorities(String role1) {
-        ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if (role1 != null) {
-            grantedAuthorities.add(new SimpleGrantedAuthority("role1_" + role1));
+    private List<GrantedAuthority> getGrantedAuthorities(String role) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        if (role != null && !role.isBlank()) {
+            String authority = role.startsWith("ROLE_")
+                    ? role
+                    : "ROLE_" + role.toUpperCase();
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority));
         }
-
         return grantedAuthorities;
     }
 
