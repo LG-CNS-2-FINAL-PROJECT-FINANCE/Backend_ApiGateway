@@ -85,7 +85,7 @@ pipeline {
                 //    sh "podman push ${DOCKER_IMAGE_NAME}"
                 //}
                 //else if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main'){
-                PROD_IMAGE_NAME = ${PROD_REGISTRY}/${APP_NAME}:${APP_VERSION}
+                PROD_IMAGE_NAME = "${PROD_REGISTRY}/${APP_NAME}:${APP_VERSION}"
                 sh "echo Image pushing to prod registry..."
                 sh "podman tag ${DOCKER_IMAGE_NAME} ${PROD_IMAGE_NAME}"
                 sh "podman push ${PROD_IMAGE_NAME}"
