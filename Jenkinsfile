@@ -117,7 +117,7 @@ pipeline {
                         def MANIFEST_REPO = "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/LG-CNS-2-FINAL-PROJECT-FINANCE/Backend_Manifests.git"
 
                         if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main'){
-                            MANIFEST_DIR = 'helm_chart_prod'
+                            MANIFEST_DIR = 'helm_prod'
                         }
 
                         sh """
