@@ -116,6 +116,10 @@ pipeline {
                         def imageTag = "${APP_VERSION}"
                         def MANIFEST_REPO = "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/LG-CNS-2-FINAL-PROJECT-FINANCE/Backend_Manifests.git"
 
+                        else if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main'){
+                            MANIFEST_DIR = 'helm_chart_prod'
+                        }
+
                         sh """
                              # Git 사용자 정보 설정(커밋 사용자 명시땜에)
                             git config --global user.email "${USER_EMAIL}"
