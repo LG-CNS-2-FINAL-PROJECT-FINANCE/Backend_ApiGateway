@@ -29,10 +29,17 @@ pipeline {
             //}
             steps {
                 script {
-                    sh """
-                    aws ecr get-login-password --region ap-northeast-2 \
-                    | podman login --username AWS --password-stdin ${PROD_REGISTRY}
-                    """
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws-credential',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ]]) {
+                        sh """
+                        aws ecr get-login-password --region ap-northeast-2 \
+                        | podman login --username AWS --password-stdin ${PROD_REGISTRY}
+                        """
+                    }
                 }
             }
         }
