@@ -93,7 +93,7 @@ pipeline {
                     //    sh "podman push ${DOCKER_IMAGE_NAME}"
                     //}
                     // master/main 브랜취일시 ecr로 푸쉬
-                    else if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'main'){
+                    if (env.BRANCH_NAME == 'dev' || env.BRANCH_NAME == 'main'){
                         PROD_IMAGE_NAME = "${PROD_REGISTRY}/${APP_NAME}:${APP_VERSION}"
                         sh "echo Image pushing to prod registry..."
                         sh "podman tag ${DOCKER_IMAGE_NAME} ${PROD_IMAGE_NAME}"
