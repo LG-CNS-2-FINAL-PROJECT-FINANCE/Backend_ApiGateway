@@ -76,22 +76,24 @@ pipeline {
 
         stage('Image Build and Push to Registry') {
             steps {
-                // 이미지 빌드
-                sh "echo Image building..."
-                sh "podman build -t ${DOCKER_IMAGE_NAME} ."
-                // 레지스트리 푸쉬
-                //if (env.BRANCH_NAME == 'dev'){
-                //    sh "echo Image pushing to local registry..."
-                //    sh "podman push ${DOCKER_IMAGE_NAME}"
-                //}
-                //else if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main'){
-                PROD_IMAGE_NAME = "${PROD_REGISTRY}/${APP_NAME}:${APP_VERSION}"
-                sh "echo Image pushing to prod registry..."
-                sh "podman tag ${DOCKER_IMAGE_NAME} ${PROD_IMAGE_NAME}"
-                sh "podman push ${PROD_IMAGE_NAME}"
-                //}
-                // 로컬 이미지 제거
-                sh "podman rmi -f ${DOCKER_IMAGE_NAME} || true"
+                script {
+                    // 이미지 빌드
+                    sh "echo Image building..."
+                    sh "podman build -t ${DOCKER_IMAGE_NAME} ."
+                    // 레지스트리 푸쉬
+                    //if (env.BRANCH_NAME == 'dev'){
+                    //    sh "echo Image pushing to local registry..."
+                    //    sh "podman push ${DOCKER_IMAGE_NAME}"
+                    //}
+                    //else if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main'){
+                    PROD_IMAGE_NAME = "${PROD_REGISTRY}/${APP_NAME}:${APP_VERSION}"
+                    sh "echo Image pushing to prod registry..."
+                    sh "podman tag ${DOCKER_IMAGE_NAME} ${PROD_IMAGE_NAME}"
+                    sh "podman push ${PROD_IMAGE_NAME}"
+                    //}
+                    // 로컬 이미지 제거
+                    sh "podman rmi -f ${DOCKER_IMAGE_NAME} || true"
+                }
             }
         }
 
