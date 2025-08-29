@@ -2,25 +2,41 @@
 def APP_NAME
 def APP_VERSION
 def DOCKER_IMAGE_NAME
+def PROD_IMAGE_NAME
 
 pipeline {
     agent any
 
     environment {
-        REGISTRY_HOST = "192.168.56.200:5000"
         USER_EMAIL = 'ssassaium@gmail.com'
         USER_ID = 'kaebalsaebal'
         SERVICE_NAME = 'api_gateway'
-
+        MANIFEST_DIR = 'helm_chart'
+        REGISTRY_HOST = credentials('DEV_REGISTRY')
+        PROD_REGISTRY = credentials('PROD_REGISTRY')
     }
 
     tools {
         gradle 'Gradle 8.14.2' // 젠킨스 Tools의 Gradle 이름
         jdk 'OpenJDK 17' // 젠킨스 Tools의 JDK 이름
-        //dockerTool 'Docker' // 젠킨스 Tools의 Docker 이름
     }
 
     stages {
+
+        stage('Login into AWS When Master Branch') {
+            //when {
+            //    expression { env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main' }
+            //}
+            steps {
+                script {
+                    sh """
+                    aws ecr get-login-password --region ap-northeast-2 \
+                    | podman login --username AWS --password-stdin ${PROD_REGISTRY}
+                    """
+                }
+            }
+        }
+
         stage('Set Version') {
             steps {
                 script {
@@ -64,8 +80,16 @@ pipeline {
                 sh "echo Image building..."
                 sh "podman build -t ${DOCKER_IMAGE_NAME} ."
                 // 레지스트리 푸쉬
-                sh "echo Image pushing to local registry..."
-                sh "podman push ${DOCKER_IMAGE_NAME}"
+                //if (env.BRANCH_NAME == 'dev'){
+                //    sh "echo Image pushing to local registry..."
+                //    sh "podman push ${DOCKER_IMAGE_NAME}"
+                //}
+                //else if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main'){
+                PROD_IMAGE_NAME = ${PROD_REGISTRY}/${APP_NAME}:${APP_VERSION}
+                sh "echo Image pushing to prod registry..."
+                sh "podman tag ${DOCKER_IMAGE_NAME} ${PROD_IMAGE_NAME}"
+                sh "podman push ${PROD_IMAGE_NAME}"
+                //}
                 // 로컬 이미지 제거
                 sh "podman rmi -f ${DOCKER_IMAGE_NAME} || true"
             }
@@ -93,12 +117,12 @@ pipeline {
                             cd Backend_Manifests
 
                             # yq를 사용하여 개발 환경의 values 파일 업데이트
-                            yq -i '.image.repository = "${imageRepo}"' helm_chart/${SERVICE_NAME}/values-dev.yaml
-                            yq -i '.image.tag = "${imageTag}"' helm_chart/${SERVICE_NAME}/values-dev.yaml
+                            yq -i '.image.repository = "${imageRepo}"' ${MANIFEST_DIR}/${SERVICE_NAME}/values-dev.yaml
+                            yq -i '.image.tag = "${imageTag}"' ${MANIFEST_DIR}/${SERVICE_NAME}/values-dev.yaml
 
                             # 변경 사항 커밋 및 푸시
                             if ! git diff --quiet; then
-                              git add helm_chart/${SERVICE_NAME}/values-dev.yaml
+                              git add ${MANIFEST_DIR}/${SERVICE_NAME}/values-dev.yaml
                               git commit -m "Update image tag for dev to ${DOCKER_IMAGE_NAME} [skip ci]"
                               git push origin master
                             else
@@ -123,6 +147,9 @@ pipeline {
         always {
             echo "Cleaning up workspace..."
             deleteDir() // workspace 전체 정리
+            echo "Cleaning up podman..."
+            sh "podman image prune -af || true"
+            sh "podman container prune -f || true"
         }
     }
 }
