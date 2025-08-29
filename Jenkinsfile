@@ -67,7 +67,7 @@ pipeline {
 
         stage('Checkout Branch') {
             steps {
-                // Git에서 dev 브랜치의 코드를 가져옵니다.
+                // Git에서 해당 브랜취의 코드를 가져옵니다.
                 checkout scm
             }
         }
