@@ -10,10 +10,10 @@ pipeline {
     environment {
         USER_EMAIL = 'ssassaium@gmail.com'
         USER_ID = 'kaebalsaebal'
-        SERVICE_NAME = 'api_gateway'
         MANIFEST_DIR = 'helm_chart'
         REGISTRY_HOST = credentials('DEV_REGISTRY')
         PROD_REGISTRY = credentials('PROD_REGISTRY')
+        SERVICE_NAME = 'api_gateway'
     }
 
     tools {
@@ -22,8 +22,8 @@ pipeline {
     }
 
     stages {
-
-        stage('Login into AWS When Master Branch') {
+		    // master/main 브랜취시 aws ecr 연결
+		    stage('Login into AWS When Master Branch') {
             when {
                 expression { env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main' }
             }
@@ -43,7 +43,7 @@ pipeline {
                 }
             }
         }
-
+	    
         stage('Set Version') {
             steps {
                 script {
@@ -87,11 +87,12 @@ pipeline {
                     // 이미지 빌드
                     sh "echo Image building..."
                     sh "podman build -t ${DOCKER_IMAGE_NAME} ."
-                    // 레지스트리 푸쉬
+                    // 레지스트리 푸쉬 - dev와 master 분리
                     if (env.BRANCH_NAME == 'dev'){
                         sh "echo Image pushing to local registry..."
                         sh "podman push ${DOCKER_IMAGE_NAME}"
                     }
+                    // master/main 브랜취일시 ecr로 푸쉬
                     else if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main'){
                         PROD_IMAGE_NAME = "${PROD_REGISTRY}/${APP_NAME}:${APP_VERSION}"
                         sh "echo Image pushing to prod registry..."
@@ -115,7 +116,8 @@ pipeline {
                         def imageRepo = "${REGISTRY_HOST}/${APP_NAME}"
                         def imageTag = "${APP_VERSION}"
                         def MANIFEST_REPO = "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/LG-CNS-2-FINAL-PROJECT-FINANCE/Backend_Manifests.git"
-
+												
+												// master/main 브랜취용 매니페스트 분리
                         if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main'){
                             MANIFEST_DIR = 'helm_prod'
                         }
@@ -161,8 +163,8 @@ pipeline {
             echo "Cleaning up workspace..."
             deleteDir() // workspace 전체 정리
             echo "Cleaning up podman..."
-            sh "podman image prune -af || true"
-            sh "podman container prune -f || true"
+            sh "podman image prune -af || true" // podman 찌꺼기가 쌓여, 정리
+            sh "podman container prune -f || true" // podman 찌꺼기가 쌓여, 정리
         }
     }
 }
