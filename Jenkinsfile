@@ -134,12 +134,12 @@ pipeline {
                             cd Backend_Manifests
 
                             # yq를 사용하여 개발 환경의 values 파일 업데이트
-                            yq -i '.image.repository = "${imageRepo}"' ${MANIFEST_DIR}/${SERVICE_NAME}/${HELM_VALUES}.yaml
-                            yq -i '.image.tag = "${imageTag}"' ${MANIFEST_DIR}/${SERVICE_NAME}/${HELM_VALUES}.yaml
+                            yq -i '.image.repository = "${imageRepo}"' helm_chart/${SERVICE_NAME}/${HELM_VALUES}.yaml
+                            yq -i '.image.tag = "${imageTag}"' helm_chart/${SERVICE_NAME}/${HELM_VALUES}.yaml
 
                             # 변경 사항 커밋 및 푸시
                             if ! git diff --quiet; then
-                              git add ${MANIFEST_DIR}/${SERVICE_NAME}/${HELM_VALUES}.yaml
+                              git add helm_chart/${SERVICE_NAME}/${HELM_VALUES}.yaml
                               git commit -m "Update image tag for dev to ${DOCKER_IMAGE_NAME} [skip ci]"
                               git push origin master
                             else
