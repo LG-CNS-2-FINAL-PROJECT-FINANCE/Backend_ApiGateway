@@ -1,24 +1,32 @@
 package com.ddiring.k8s_api_gateway.gateway.filter;
 
 import com.ddiring.k8s_api_gateway.security.jwt.authentication.UserPrincipal;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.function.ServerRequest;
 
 import java.util.function.Function;
 
+@Slf4j
 public class AuthenticationHeaderFilterFunction {
     public static Function<ServerRequest, ServerRequest> addHeader() {
         return request -> {
             ServerRequest.Builder requestBuilder = ServerRequest.from(request);
 
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if( principal instanceof UserPrincipal userPrincipal) {
-                requestBuilder.header("X-Auth-UserId",userPrincipal.getUserId());
-
-                // 다른 Claims 들도 ...
+            log.info(principal.getClass().getName());
+            if(principal instanceof UserPrincipal userPrincipal) {
+                String userSeq = userPrincipal.getUserSeq();
+                String role =  userPrincipal.getRole();
+                log.info("userSeq : {} role : {}", userSeq, role);
+                requestBuilder.header("userSeq", userSeq);
+                requestBuilder.header("role", role);
             }
-
-            // Client ID, DeviceType 등도 필요시 입력
+            else {
+                log.info("sda : {}", principal);
+            }
 
             return requestBuilder.build();
         };

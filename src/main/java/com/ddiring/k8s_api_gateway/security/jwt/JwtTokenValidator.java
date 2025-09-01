@@ -9,6 +9,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenValidator {
@@ -39,7 +41,8 @@ public class JwtTokenValidator {
     }
 
     public JwtAuthentication validateToken(String token) {
-        String userId = null;
+        String userSeq = null;
+        String role = null;
 
         final Claims claims = this.verifyAndGetClaims(token);
         if (claims == null) {
@@ -51,15 +54,26 @@ public class JwtTokenValidator {
             return null;
         }
 
-        userId = claims.get("userId", String.class);
-
+        userSeq = claims.get("userSeq", String.class);
+        role = claims.get("role", String.class);
+        log.info("userSeq={}, role={}", userSeq, role);
         String tokenType = claims.get("tokenType", String.class);
         if (!"access".equals(tokenType)) {
             return null;
         }
 
-        UserPrincipal principal = new UserPrincipal(userId);
-        return new JwtAuthentication(principal, token, getGrantedAuthorities("user"));
+        UserPrincipal principal = new UserPrincipal(userSeq, role);
+        log.info("principal={}", principal);
+        String role1;
+        if (role != null && role.equals("ADMIN")) {
+            role1 = "ADMIN";
+        } else if (role != null && (role.equals("CREATOR") || role.equals("USER"))) {
+            role1 = "USER";
+        } else {
+            role1 = "GUEST";
+        }
+
+        return new JwtAuthentication(principal, token, getGrantedAuthorities(role));
     }
 
     private Claims verifyAndGetClaims(String token) {
@@ -79,17 +93,19 @@ public class JwtTokenValidator {
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(String role) {
-        ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if (role != null) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role));
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        if (role != null && !role.isBlank()) {
+            String authority = role.startsWith("ROLE_")
+                    ? role
+                    : "ROLE_" + role.toUpperCase();
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority));
         }
-
         return grantedAuthorities;
     }
 
     public String getToken(HttpServletRequest request) {
         String authHeader = getAuthHeaderFromHeader(request);
-        if (authHeader != null && authHeader.startsWith("Bearer")) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
 

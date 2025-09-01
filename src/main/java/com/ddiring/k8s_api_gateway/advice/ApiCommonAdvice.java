@@ -77,6 +77,6 @@ public class ApiCommonAdvice {
     public ApiResponseDto<String> handleException(Exception e) {
         return ApiResponseDto.createError(
                 "ServerError",
-                "서버 에러입니다.");
+                e.getMessage());
     }
 }

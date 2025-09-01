@@ -10,14 +10,15 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor
 public class UserPrincipal implements Principal {
-    private final String userId;
+    private final String userSeq;
+    private final String role;
 
     public boolean hasName() {
-        return userId != null;
+        return userSeq != null;
     }
 
     public boolean hasMandatory() {
-        return userId != null;
+        return userSeq != null;
     }
 
     @Override
@@ -27,27 +28,23 @@ public class UserPrincipal implements Principal {
 
     @Override
     public String getName() {
-        return userId;
+        return userSeq;
     }
 
     @Override
     public boolean equals(Object another) {
-        if( this == another) return true;
-        if( another == null) return false;
-        if(!getClass().isAssignableFrom(another.getClass())) return false;
+        if (this == another) return true;
+        if (another == null || getClass() != another.getClass()) return false; // 클래스 체크 방식 수정
 
         UserPrincipal principal = (UserPrincipal) another;
 
-        if (Objects.equals(userId, principal.userId)) {
-            return false;
-        }
-
-        return true;
+        return Objects.equals(userSeq, principal.userSeq);
     }
+
 
     @Override
     public  int hashCode() {
-        int result = userId != null ? userId.hashCode() : 0;
+        int result = userSeq != null ? userSeq.hashCode() : 0;
         return result;
     }
 }
