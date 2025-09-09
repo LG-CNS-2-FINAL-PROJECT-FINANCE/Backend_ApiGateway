@@ -13,7 +13,7 @@ pipeline {
         USER_ID = 'kaebalsaebal'
         REGISTRY_HOST = credentials('DEV_REGISTRY')
         PROD_REGISTRY = credentials('PROD_REGISTRY')
-        SERVICE_NAME = '(서비스 이름: product, market 등...)'
+        SERVICE_NAME = 'api_gateway'
     }
 
     tools {
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
 
-		            REGISTRY_HOST = PROD_REGISTRY
+                    REGISTRY_HOST = PROD_REGISTRY
 
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
@@ -128,7 +128,6 @@ pipeline {
                         }
 
                         sh """
-                            #!/bin/bash
                              # Git 사용자 정보 설정(커밋 사용자 명시땜에)
                             git config --global user.email "${USER_EMAIL}"
                             git config --global user.name "${USER_ID}"
