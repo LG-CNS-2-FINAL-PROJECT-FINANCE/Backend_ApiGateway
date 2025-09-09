@@ -12,6 +12,7 @@ pipeline {
         USER_EMAIL = 'ssassaium@gmail.com'
         USER_ID = 'kaebalsaebal'
         REGISTRY_HOST = credentials('DEV_REGISTRY')
+        PROD_REGISTRY = credentials('PROD_REGISTRY')
         SERVICE_NAME = '(서비스 이름: product, market 등...)'
     }
 
@@ -28,9 +29,9 @@ pipeline {
             }
             steps {
                 script {
-		                
-		            REGISTRY_HOST = credentials('PROD_REGISTRY')
-		                
+
+		            REGISTRY_HOST = PROD_REGISTRY
+
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding',
                         credentialsId: 'aws-credential',
