@@ -49,10 +49,13 @@ public class WebSecurityConfig {
                                 .authenticationEntryPoint(authenticationEntryPoint)
                                 .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(registry -> registry
+                        .requestMatchers("/api/**").permitAll()
+                        // ADMIN 역할이 필요한 API
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/user/**").hasAnyRole("USER","CREATOR", "ADMIN", "GUEST")
+                        // bankType 업데이트 API는 GUEST 역할 사용자에게만 허용
                         .requestMatchers("/api/user/auth/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
+                        // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 );
 
@@ -66,7 +69,7 @@ public class WebSecurityConfig {
         config.setAllowCredentials(true);
 //        config.setAllowedOrigins(List.of("*"));
         config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("*"));
 
